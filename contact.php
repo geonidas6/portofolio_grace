@@ -2,37 +2,39 @@
 header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize input data
-    $name = strip_tags(trim($_POST["name"]));
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-    $message = strip_tags(trim($_POST["message"]));
+    // Collect input data
+    $name = $_POST["name"] ?? 'Non renseigné';
+    $email = $_POST["email"] ?? 'Non renseigné';
+    $message = $_POST["message"] ?? 'Non renseigné';
 
-    // Check if data is valid
-    if (empty($name) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode(["status" => "error", "message" => "Veuillez remplir tous les champs correctement."]);
-        exit;
-    }
+    // Formspree destination URL (your provided ID)
+    $url = "https://formspree.io/f/xbdpldqp";
 
-    // Recipient email
-    $recipient = "gracebaliki@gmail.com";
+    // Prepare data for the external API
+    $data = [
+        "name" => $name,
+        "email" => $email,
+        "message" => $message
+    ];
 
-    // Email subject
-    $subject = "Nouveau message de Portfolio : $name";
+    // Initialize cURL (PHP Proxy logic)
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: application/json'
+    ]);
 
-    // Email content
-    $email_content = "Nom: $name\n";
-    $email_content .= "Email: $email\n\n";
-    $email_content .= "Message:\n$message\n";
+    // Execute the request
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    // Email headers
-    $email_headers = "From: $name <$email>\r\n";
-    $email_headers .= "Reply-To: $email\r\n";
-
-    // Send the email
-    if (mail($recipient, $subject, $email_content, $email_headers)) {
-        echo json_encode(["status" => "success", "message" => "Merci ! Votre message a été envoyé avec succès."]);
+    if ($http_code == 200 || $http_code == 201) {
+        echo json_encode(["status" => "success", "message" => "Merci ! Votre message a été envoyé via PHP."]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Oups ! Un problème est survenu et nous n'avons pas pu envoyer votre message."]);
+        echo json_encode(["status" => "error", "message" => "Un problème est survenu lors de l'envoi via le script PHP."]);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Méthode non autorisée."]);

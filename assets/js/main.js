@@ -132,21 +132,25 @@ if (contactForm) {
         const formData = new FormData(contactForm);
 
         try {
-            const response = await fetch('contact.php', {
+            const response = await fetch(contactForm.action, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
             });
 
             const result = await response.json();
 
-            formStatus.style.display = 'block';
-            formStatus.innerText = result.message;
-            
             if (result.status === 'success') {
+                formStatus.style.display = 'block';
                 formStatus.style.color = 'var(--primary-color)';
+                formStatus.innerText = result.message;
                 contactForm.reset();
             } else {
-                formStatus.style.color = '#ef4444'; // Red for error
+                formStatus.style.display = 'block';
+                formStatus.style.color = '#ef4444';
+                formStatus.innerText = result.message || 'Oups ! Un problème est survenu lors de l\'envoi.';
             }
         } catch (error) {
             formStatus.style.display = 'block';
@@ -164,13 +168,13 @@ if (contactForm) {
     });
 }
 
-// Video start logic (ensure videos start from beginning if they have a #t= offset)
+// Gallery Video logic
 const galleryVideos = document.querySelectorAll('.gallery-item video');
 galleryVideos.forEach(video => {
     video.addEventListener('play', function() {
-        if (this.dataset.started !== 'true') {
-            this.currentTime = 0;
-            this.dataset.started = 'true';
-        }
+        // Optional: stop other videos when one plays
+        galleryVideos.forEach(v => {
+            if (v !== video) v.pause();
+        });
     });
 });
