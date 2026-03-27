@@ -26,7 +26,12 @@
     <nav>
         <div class="container">
             <a href="#" class="logo">GRACE<span>.</span></a>
-            <ul class="nav-links">
+            
+            <div class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-links" id="nav-links">
                 <li><a href="#about">À propos</a></li>
                 <li><a href="#skills">Compétences</a></li>
                 <li><a href="#projects">Projets</a></li>
@@ -204,7 +209,7 @@
                 <h2>Projets Réalisés</h2>
                 <div class="line"></div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+            <div class="projects-grid">
                 <!-- Project 1: JMO Transport -->
                 <div class="skill-card" style="text-align: left; padding: 0; overflow: hidden; border-radius: 1rem;">
                     <div
@@ -375,7 +380,7 @@
                 <h2>Travaillons Ensemble</h2>
                 <div class="line"></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+            <div class="contact-grid">
                 <div>
                     <h3>Contactez-moi</h3>
                     <p style="margin-bottom: 2rem;">Je suis ouverte à de nouvelles opportunités en tant qu'assistante de
