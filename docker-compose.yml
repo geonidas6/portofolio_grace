@@ -1,0 +1,27 @@
+services:
+  # --- PORTFOLIO GRACE WEB INTERFACE ---
+  portofolio_grace:
+    build:
+      context: .
+    container_name: portofolio_grace
+    env_file: .env
+    environment:
+      - DOMAIN=${DOMAIN:-grace.local}
+    # No need for separate volumes unless we want to persist something
+    # volumes:
+    #   - .:/var/www/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portofolio_grace.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.portofolio_grace.entrypoints=websecure"
+      - "traefik.http.routers.portofolio_grace.tls.certresolver=myresolver"
+      - "traefik.http.services.portofolio_grace.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy_net"
+    restart: unless-stopped
+    networks:
+      - proxy_net
+
+# --- DÉFINITION DU RÉSEAU ---
+networks:
+  proxy_net:
+    external: true

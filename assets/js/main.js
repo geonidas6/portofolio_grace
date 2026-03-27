@@ -140,17 +140,16 @@ if (contactForm) {
                 }
             });
 
-            const result = await response.json();
-
-            if (result.status === 'success') {
+            if (response.ok) {
                 formStatus.style.display = 'block';
                 formStatus.style.color = 'var(--primary-color)';
-                formStatus.innerText = result.message;
+                formStatus.innerText = "Merci ! Votre message a été envoyé avec succès.";
                 contactForm.reset();
             } else {
+                const result = await response.json();
                 formStatus.style.display = 'block';
                 formStatus.style.color = '#ef4444';
-                formStatus.innerText = result.message || 'Oups ! Un problème est survenu lors de l\'envoi.';
+                formStatus.innerText = result.error || 'Oups ! Un problème est survenu lors de l\'envoi.';
             }
         } catch (error) {
             formStatus.style.display = 'block';
