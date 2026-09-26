@@ -12,7 +12,7 @@ services:
     #   - .:/var/www/html
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portofolio_grace.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.portofolio_grace.rule=Host(`${DOMAIN}`) || Host(`${DOMAIN_WWW}`)"
       - "traefik.http.routers.portofolio_grace.entrypoints=websecure"
       - "traefik.http.routers.portofolio_grace.tls.certresolver=myresolver"
       - "traefik.http.services.portofolio_grace.loadbalancer.server.port=80"
